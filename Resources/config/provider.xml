@@ -7,6 +7,7 @@
         
         <parameter key="sonata.media.provider.sapo.class">Nz\SonataMediaBundle\Provider\SapoProvider</parameter>
         <parameter key="sonata.media.provider.playwire.class">Nz\SonataMediaBundle\Provider\PlayWireProvider</parameter>
+        <parameter key="sonata.media.provider.soundcloud.class">Nz\SonataMediaBundle\Provider\SoundcloudProvider</parameter>
       
     </parameters>
 
@@ -47,6 +48,27 @@
                 <argument type="collection">
                     <argument key='helper_thumbnail'>SonataMediaBundle:Provider:thumbnail.html.twig</argument>
                     <argument key='helper_view'>NzSonataMediaBundle:Provider:view_playwire.html.twig</argument>
+                </argument>
+            </call>
+            <call method="setResizer">
+                <argument type="service" id="sonata.media.resizer.simple" />
+            </call>
+        </service>
+        
+        <service id="sonata.media.provider.soundcloud" class="%sonata.media.provider.soundcloud.class%">
+            <tag name="sonata.media.provider" />
+            <argument>sonata.media.provider.soundcloud</argument>
+            <argument type="service" id="sonata.media.filesystem.local" />
+            <argument type="service" id="sonata.media.cdn.server" />
+            <argument type="service" id="sonata.media.generator.default" />
+            <argument type="service" id="sonata.media.thumbnail.format" />
+            <argument type="service" id="sonata.media.buzz.browser" />
+            <argument type="service" id="sonata.media.metadata.proxy" />
+            <argument />
+            <call method="setTemplates">
+                <argument type="collection">
+                    <argument key='helper_thumbnail'>SonataMediaBundle:Provider:thumbnail.html.twig</argument>
+                    <argument key='helper_view'>NzSonataMediaBundle:Provider:view_soundcloud.html.twig</argument>
                 </argument>
             </call>
             <call method="setResizer">

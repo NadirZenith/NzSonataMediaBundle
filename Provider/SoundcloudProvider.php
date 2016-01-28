@@ -22,7 +22,7 @@ use Sonata\MediaBundle\Thumbnail\ThumbnailInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sonata\MediaBundle\Provider\BaseVideoProvider;
 
-class SapoProvider extends BaseVideoProvider
+class SoundcloudProvider extends BaseVideoProvider
 {
 
     /**
@@ -67,7 +67,6 @@ class SapoProvider extends BaseVideoProvider
         }
 
         if (preg_match("/videos\.sapo\.pt\/([A-Za-z0-9]+)(\/mov\/)?/", $media->getBinaryContent(), $matches)) {
-        /*if (preg_match("/videos\.sapo\.pt\/([A-Za-z0-9]+)\/mov\//", $media->getBinaryContent(), $matches)) {*/
             $media->setBinaryContent($matches[1]);
         }
     }
@@ -149,13 +148,16 @@ class SapoProvider extends BaseVideoProvider
      */
     public function updateMetadata(MediaInterface $media, $force = false)
     {
-
-        $url = sprintf('http://videos.sapo.pt/oembed?url=http://videos.sapo.pt/%s&format=json', $media->getProviderReference());
-
+        //http://api.soundcloud.com/resolve?url=http://soundcloud.com/matas/hobnotropic&client_id=656c5a7c166b49062f31fbf24eb13fcd
+        /* $url = sprintf('http://videos.sapo.pt/oembed?url=http://videos.sapo.pt/%s&format=json', $media->getProviderReference()); */
+        /* $url = sprintf('http://api.soundcloud.com/resolve?url=%s', $media->getProviderReference()); */
+        /* $url = sprintf('http://soundcloud.com/oembed?url=%s&format=json&client_id=%s', $media->getProviderReference(), '656c5a7c166b49062f31fbf24eb13fcd'); */
+        $url = sprintf('http://soundcloud.com/oembed?url=%s&format=json', $media->getProviderReference());
         try {
             $metadata = $this->getMetadata($media, $url);
-            $metadata_thumbnail = $this->getMetadataThumbnail($media);
-            $metadata = array_merge($metadata, $metadata_thumbnail);
+            /* d($metadata); */
+            /* $metadata_thumbnail = $this->getMetadataThumbnail($media); */
+            /* $metadata = array_merge($metadata, $metadata_thumbnail); */
         } catch (\RuntimeException $e) {
 
             $media->setEnabled(false);
@@ -163,7 +165,6 @@ class SapoProvider extends BaseVideoProvider
 
             return;
         }
-
         $media->setProviderMetadata($metadata);
 
         if ($force) {
@@ -173,7 +174,6 @@ class SapoProvider extends BaseVideoProvider
 
         $media->setHeight($metadata['height']);
         $media->setWidth($metadata['width']);
-        $media->setContentType('video/x-flv');
     }
 
     /**
