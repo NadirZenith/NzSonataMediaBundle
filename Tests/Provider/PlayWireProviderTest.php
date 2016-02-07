@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Sonata Project package.
- *
- * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Nz\SonataMediaBundle\Tests\Provider;
 
 use Buzz\Browser;
@@ -128,7 +119,7 @@ class PlayWireProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testTransformWithUrl($url)
     {
-        
+
         $response = new Response();
         $response->setContent(file_get_contents(__DIR__ . '/../fixtures/valid_playwire.txt'));
 
@@ -156,7 +147,6 @@ class PlayWireProviderTest extends \PHPUnit_Framework_TestCase
         return array(
             array('http://config.playwire.com/1000748/videos/v2/4517915/zeus.json')
         );
-       
     }
 
     public function testForm()

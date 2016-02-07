@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Sonata Project package.
- *
- * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Nz\SonataMediaBundle\Tests\Provider;
 
 use Buzz\Browser;
@@ -65,8 +56,6 @@ class SapoProviderTest extends \PHPUnit_Framework_TestCase
 
         $media->setId(1023457);
 
-        /* $this->assertSame('https://cdn.video.playwire.com/1000748/videos/4517915/poster_0000.png', $provider->getReferenceImage($media)); */
-
         $this->assertSame('default/0011/24', $provider->generatePath($media));
         $this->assertSame('/uploads/media/default/0011/24/thumb_1023457_big.jpg', $provider->generatePublicUrl($media, 'big'));
     }
@@ -103,7 +92,7 @@ class SapoProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testTransformWithSig()
     {
-           $browser = $this->getMockBuilder('Buzz\Browser')->getMock();
+        $browser = $this->getMockBuilder('Buzz\Browser')->getMock();
         $response = new Response();
         $response->setContent(file_get_contents(__DIR__ . '/../fixtures/valid_sapo.txt'));
 
