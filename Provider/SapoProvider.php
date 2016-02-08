@@ -118,10 +118,13 @@ class SapoProvider extends BaseVideoProvider
             throw new \RuntimeException('Unable to retrieve the thumbnail information for :' . $url, null, $e);
         }
 
-        /* $crawler = new \Symfony\Component\DomCrawler\Crawler($response->getContent()); */
         $crawler = new \Symfony\Component\DomCrawler\Crawler($html);
         $metadata = [];
-        $thumbnail_node = $crawler->filter('link[itemprop="thumbnailUrl"]');
+        
+        //requires symfony css selector
+        //$thumbnail_node = $crawler->filter('link[itemprop="thumbnailUrl"]');
+        //use xpath
+        $thumbnail_node = $crawler->filterXPath('//*[@id="body_content"]/div/article/div[2]/link[2]');
 
         if ($thumbnail_node->count() === 1) {
             //http://thumbs.web.sapo.io/?pic=http://cache04.stormap.sapo.pt/vidstore18/thumbnais/54/88/76/11128693_4b5Bb.jpg&crop=center&tv=2&W=1280&H=960&errorpic=http://assets.web.sapo.io/sapovideo/sv/20150903/imgs/playlist_default_thumb_error_pt.gif

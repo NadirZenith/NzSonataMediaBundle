@@ -8,6 +8,7 @@ use Imagine\Image\Box;
 use Nz\SonataMediaBundle\Provider\SapoProvider;
 use Sonata\MediaBundle\Tests\Entity\Media;
 use Sonata\MediaBundle\Thumbnail\FormatThumbnail;
+include_once 'nzdebug.php';
 
 class SapoProviderTest extends \PHPUnit_Framework_TestCase
 {
