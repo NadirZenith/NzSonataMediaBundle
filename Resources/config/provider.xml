@@ -8,7 +8,8 @@
         <parameter key="sonata.media.provider.sapo.class">Nz\SonataMediaBundle\Provider\SapoProvider</parameter>
         <parameter key="sonata.media.provider.playwire.class">Nz\SonataMediaBundle\Provider\PlayWireProvider</parameter>
         <parameter key="sonata.media.provider.soundcloud.class">Nz\SonataMediaBundle\Provider\SoundcloudProvider</parameter>
-      
+        <parameter key="sonata.media.provider.video.class">Nz\SonataMediaBundle\Provider\VideoProvider</parameter>
+
     </parameters>
 
     <services>
@@ -69,6 +70,38 @@
                 <argument type="collection">
                     <argument key='helper_thumbnail'>SonataMediaBundle:Provider:thumbnail.html.twig</argument>
                     <argument key='helper_view'>NzSonataMediaBundle:Provider:view_soundcloud.html.twig</argument>
+                </argument>
+            </call>
+            <call method="setResizer">
+                <argument type="service" id="sonata.media.resizer.simple" />
+            </call>
+        </service>
+        
+        <service id="sonata.media.provider.video" class="%sonata.media.provider.video.class%">
+            <tag name="sonata.media.provider" />
+            <argument>sonata.media.provider.video</argument>
+            
+            <argument type="service" id="sonata.media.filesystem.local" />
+            <argument type="service" id="sonata.media.cdn.server" />
+            <argument type="service" id="sonata.media.generator.default" />
+            <argument type="service" id="sonata.media.thumbnail.format" />
+            
+            <!--<argument key="val" type="collection">-->
+            <!-- allowed_extensions -->
+            <argument type="collection">
+                <argument>mp4</argument>
+            </argument>
+            <!-- allowed_mime_types -->
+            <argument type="collection">
+                <argument>video/mp4</argument>
+            </argument>
+            <argument type="service" id="sonata.media.adapter.image.gd" />
+            <argument type="service" id="sonata.media.metadata.proxy" />
+       
+            <call method="setTemplates">
+                <argument type="collection">
+                    <argument key='helper_thumbnail'>SonataMediaBundle:Provider:thumbnail.html.twig</argument>
+                    <argument key='helper_view'>NzSonataMediaBundle:Provider:view_video.html.twig</argument>
                 </argument>
             </call>
             <call method="setResizer">

@@ -57,6 +57,12 @@ class VideoProvider extends FileProvider
         return new Metadata($this->getName(), $this->getName() . '.description', false, 'SonataMediaBundle', array('class' => 'fa fa-picture-o'));
     }
 
+    public function generateThumbnails(MediaInterface $media)
+    {
+
+        /* $this->thumbnail->generate($this, $media); */
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -99,6 +105,7 @@ class VideoProvider extends FileProvider
     {
         parent::doTransform($media);
 
+        return;
         if ($media->getBinaryContent() instanceof UploadedFile) {
             $fileName = $media->getBinaryContent()->getClientOriginalName();
         } elseif ($media->getBinaryContent() instanceof File) {
