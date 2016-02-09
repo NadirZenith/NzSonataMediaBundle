@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+       
+        <parameter key="nz.sonata.media.resizer.simple.class">Nz\SonataMediaBundle\Resizer\FixCropResizer</parameter>
+
+    </parameters>
+
+    <services>
+        
+        <service id="nz.sonata.media.resizer.fix_crop" class="%nz.sonata.media.resizer.simple.class%">
+            <argument type="service" id="sonata.media.adapter.image.gd" />
+            <argument>%sonata.media.resizer.simple.adapter.mode%</argument>
+            <argument type="service" id="sonata.media.metadata.proxy" />
+        </service>
+        
+    </services>
+</container>

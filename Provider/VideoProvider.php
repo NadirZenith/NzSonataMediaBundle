@@ -47,12 +47,6 @@ class VideoProvider extends FileProvider
     {
         return new Metadata($this->getName(), $this->getName() . '.description', false, 'SonataMediaBundle', array('class' => 'fa fa-picture-o'));
     }
-    /*
-      public function generateThumbnails(MediaInterface $media)
-      {
-      $this->thumbnail->generate($this, $media);
-      }
-     */
 
     /**
      * {@inheritdoc}
@@ -140,16 +134,15 @@ class VideoProvider extends FileProvider
                 ->videos()                      // filters video streams
                 ->first()                       // returns the first video stream
                 ->getDimensions();
+
+            $media->setWidth($dimension->getWidth());
+            $media->setHeight($dimension->getHeight());
+
+            $media->setProviderStatus(MediaInterface::STATUS_OK);
         } catch (\RuntimeException $e) {
+
             $media->setProviderStatus(MediaInterface::STATUS_ERROR);
-
-            return;
         }
-
-        $media->setWidth($dimension->getWidth());
-        $media->setHeight($dimension->getHeight());
-
-        $media->setProviderStatus(MediaInterface::STATUS_OK);
     }
 
     /**
@@ -158,27 +151,35 @@ class VideoProvider extends FileProvider
     public function updateMetadata(MediaInterface $media, $force = true)
     {
         try {
+
             if (!$media->getBinaryContent() instanceof \SplFileInfo) {
                 // this is now optimized at all!!!
-                $path = tempnam(sys_get_temp_dir(), 'sonata_update_metadata');
-                $fileObject = new \SplFileObject($path, 'w');
-                $fileObject->fwrite($this->getReferenceFile($media)->getContent());
+                $dir = $this->getFilesystem()->getAdapter()->getDirectory();
+                $movie_path = sprintf('%s/%s/%s', $dir, $this->generatePath($media), $media->getProviderReference());
+                $fileObject = new \SplFileObject($movie_path, 'r');
             } else {
                 $fileObject = $media->getBinaryContent();
             }
 
-            $image = $this->imagineAdapter->open($fileObject->getPathname());
-            $size = $image->getSize();
+            $ffprobe = \FFMpeg\FFProbe::create();
+
+            $dimension = $ffprobe->streams($fileObject->getPathname())
+                ->videos()                      // filters video streams
+                ->first()                       // returns the first video stream
+                ->getDimensions();
 
             $media->setSize($fileObject->getSize());
-            $media->setWidth($size->getWidth());
-            $media->setHeight($size->getHeight());
+            $media->setWidth($dimension->getWidth());
+            $media->setHeight($dimension->getHeight());
+
+            $media->setProviderStatus(MediaInterface::STATUS_OK);
         } catch (\LogicException $e) {
-            $media->setProviderStatus(MediaInterface::STATUS_ERROR);
 
             $media->setSize(0);
             $media->setWidth(0);
             $media->setHeight(0);
+
+            $media->setProviderStatus(MediaInterface::STATUS_ERROR);
         }
     }
 
@@ -187,8 +188,6 @@ class VideoProvider extends FileProvider
      */
     public function generatePublicUrl(MediaInterface $media, $format)
     {
-
-
         //image provider
         if ($format == 'reference') {
             $path = $this->getReferenceImage($media);
