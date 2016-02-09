@@ -111,7 +111,7 @@
                 </argument>
             </call>
             <call method="setResizer">
-                <argument type="service" id="sonata.media.resizer.simple" />
+                <argument type="service" id="nz.sonata.media.resizer.fix_crop" />
             </call>
         </service>
 
