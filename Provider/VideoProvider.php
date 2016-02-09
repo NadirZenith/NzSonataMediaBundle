@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Sonata Project package.
- *
- * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Nz\SonataMediaBundle\Provider;
 
 use Gaufrette\Filesystem;
@@ -56,12 +47,12 @@ class VideoProvider extends FileProvider
     {
         return new Metadata($this->getName(), $this->getName() . '.description', false, 'SonataMediaBundle', array('class' => 'fa fa-picture-o'));
     }
-
-    public function generateThumbnails(MediaInterface $media)
-    {
-
-        /* $this->thumbnail->generate($this, $media); */
-    }
+    /*
+      public function generateThumbnails(MediaInterface $media)
+      {
+      $this->thumbnail->generate($this, $media);
+      }
+     */
 
     /**
      * {@inheritdoc}
@@ -86,6 +77,7 @@ class VideoProvider extends FileProvider
             'src' => $this->generatePublicUrl($media, $format),
             'width' => $box->getWidth(),
             'height' => $box->getHeight(),
+            'type' => $media->getContentType()
             ), $options);
     }
 
@@ -94,8 +86,31 @@ class VideoProvider extends FileProvider
      */
     public function getReferenceImage(MediaInterface $media)
     {
-        return sprintf('%s/%s', $this->generatePath($media), $media->getProviderReference()
-        );
+        return sprintf('%s/%s', $this->generatePath($media), $media->getProviderReference());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getReferenceFile(MediaInterface $media)
+    {
+        $key = $this->generatePrivateUrl($media, 'reference');
+
+        // the reference file is a movie, create an image from frame and store it with the reference format
+        if ($this->getFilesystem()->has($key)) {
+            $referenceFile = $this->getFilesystem()->get($key);
+        } else {
+            $dir = $this->getFilesystem()->getAdapter()->getDirectory();
+            $movie_path = sprintf('%s/%s/%s', $dir, $this->generatePath($media), $media->getProviderReference());
+            $reference_path = sprintf('%s/%s', $dir, $key);
+            $ffmpeg = \FFMpeg\FFMpeg::create();
+            $video = $ffmpeg->open($movie_path);
+            $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(10))->save($reference_path);
+
+            $referenceFile = $this->getFilesystem()->get($key);
+        }
+
+        return $referenceFile;
     }
 
     /**
@@ -105,7 +120,6 @@ class VideoProvider extends FileProvider
     {
         parent::doTransform($media);
 
-        return;
         if ($media->getBinaryContent() instanceof UploadedFile) {
             $fileName = $media->getBinaryContent()->getClientOriginalName();
         } elseif ($media->getBinaryContent() instanceof File) {
@@ -120,17 +134,20 @@ class VideoProvider extends FileProvider
         }
 
         try {
-            $image = $this->imagineAdapter->open($media->getBinaryContent()->getPathname());
+            $ffprobe = \FFMpeg\FFProbe::create();
+
+            $dimension = $ffprobe->streams($media->getBinaryContent()->getPathname())
+                ->videos()                      // filters video streams
+                ->first()                       // returns the first video stream
+                ->getDimensions();
         } catch (\RuntimeException $e) {
             $media->setProviderStatus(MediaInterface::STATUS_ERROR);
 
             return;
         }
 
-        $size = $image->getSize();
-
-        $media->setWidth($size->getWidth());
-        $media->setHeight($size->getHeight());
+        $media->setWidth($dimension->getWidth());
+        $media->setHeight($dimension->getHeight());
 
         $media->setProviderStatus(MediaInterface::STATUS_OK);
     }
@@ -170,6 +187,9 @@ class VideoProvider extends FileProvider
      */
     public function generatePublicUrl(MediaInterface $media, $format)
     {
+
+
+        //image provider
         if ($format == 'reference') {
             $path = $this->getReferenceImage($media);
         } else {
@@ -184,6 +204,10 @@ class VideoProvider extends FileProvider
      */
     public function generatePrivateUrl(MediaInterface $media, $format)
     {
+        //video provider
+        return sprintf('%s/thumb_%s_%s.jpg', $this->generatePath($media), $media->getId(), $format);
+
+        //image provider
         return $this->thumbnail->generatePrivateUrl($this, $media, $format);
     }
 }

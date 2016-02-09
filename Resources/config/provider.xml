@@ -4,6 +4,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="nz.sonata.media.thumbnail.format">Nz\SonataMediaBundle\Thumbnail\FormatThumbnail</parameter>
         
         <parameter key="sonata.media.provider.sapo.class">Nz\SonataMediaBundle\Provider\SapoProvider</parameter>
         <parameter key="sonata.media.provider.playwire.class">Nz\SonataMediaBundle\Provider\PlayWireProvider</parameter>
@@ -13,6 +14,11 @@
     </parameters>
 
     <services>
+        
+        <!--   for video thumbnails     -->
+        <service id="nz.sonata.media.thumbnail.format" class="%nz.sonata.media.thumbnail.format%">
+            <argument type="string">%sonata.media.thumbnail.format.default%</argument>
+        </service>
        
         <service id="sonata.media.provider.sapo" class="%sonata.media.provider.sapo.class%">
             <tag name="sonata.media.provider" />
@@ -84,7 +90,7 @@
             <argument type="service" id="sonata.media.filesystem.local" />
             <argument type="service" id="sonata.media.cdn.server" />
             <argument type="service" id="sonata.media.generator.default" />
-            <argument type="service" id="sonata.media.thumbnail.format" />
+            <argument type="service" id="nz.sonata.media.thumbnail.format" />
             
             <!--<argument key="val" type="collection">-->
             <!-- allowed_extensions -->
