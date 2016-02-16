@@ -23,6 +23,11 @@ class VideoProvider extends FileProvider
     protected $imagineAdapter;
 
     /**
+     * @var array FFMpeg configs
+     */
+    protected $ffmpegConfig = array();
+
+    /**
      * @param string                   $name
      * @param Filesystem               $filesystem
      * @param CDNInterface             $cdn
@@ -97,9 +102,12 @@ class VideoProvider extends FileProvider
             $dir = $this->getFilesystem()->getAdapter()->getDirectory();
             $movie_path = sprintf('%s/%s/%s', $dir, $this->generatePath($media), $media->getProviderReference());
             $reference_path = sprintf('%s/%s', $dir, $key);
-            $ffmpeg = \FFMpeg\FFMpeg::create();
+
+            /* $ffmpeg = \FFMpeg\FFMpeg::create(); */
+            $ffmpeg = $this->getFFMpeg();
+
             $video = $ffmpeg->open($movie_path);
-            $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(10))->save($reference_path);
+            $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(1))->save($reference_path);
 
             $referenceFile = $this->getFilesystem()->get($key);
         }
@@ -128,7 +136,8 @@ class VideoProvider extends FileProvider
         }
 
         try {
-            $ffprobe = \FFMpeg\FFProbe::create();
+            /* $ffprobe = \FFMpeg\FFProbe::create(); */
+            $ffprobe = $this->getFFProbe();
 
             $dimension = $ffprobe->streams($media->getBinaryContent()->getPathname())
                 ->videos()                      // filters video streams
@@ -161,7 +170,8 @@ class VideoProvider extends FileProvider
                 $fileObject = $media->getBinaryContent();
             }
 
-            $ffprobe = \FFMpeg\FFProbe::create();
+            /* $ffprobe = \FFMpeg\FFProbe::create(); */
+            $ffprobe = $this->getFFProbe();
 
             $dimension = $ffprobe->streams($fileObject->getPathname())
                 ->videos()                      // filters video streams
@@ -181,6 +191,38 @@ class VideoProvider extends FileProvider
 
             $media->setProviderStatus(MediaInterface::STATUS_ERROR);
         }
+    }
+
+    /**
+     *  set FFMpeg Config
+     */
+    public function setFFMpegConfig(array $config = array())
+    {
+        $this->ffmpegConfig = $config;
+    }
+
+    /**
+     *  return FFMpeg Config
+     */
+    private function getFFMpegConfig()
+    {
+        return $this->ffmpegConfig;
+    }
+
+    /**
+     *  Get FFMpeg
+     */
+    private function getFFMpeg()
+    {
+        return $ffmpeg = \FFMpeg\FFMpeg::create($this->getFFMpegConfig());
+    }
+
+    /**
+     *  Get FFProbe
+     */
+    private function getFFProbe()
+    {
+        return $ffmpeg = \FFMpeg\FFProbe::create($this->getFFMpegConfig());
     }
 
     /**
