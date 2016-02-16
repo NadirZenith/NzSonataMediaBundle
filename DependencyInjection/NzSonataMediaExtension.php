@@ -34,14 +34,13 @@ class NzSonataMediaExtension extends Extension
     {
 
         $ffmpeg_config = [];
-        $ffmpeg_lib = $container->getParameter('ffmpeg.binaries');
-        $ffprobe_lib = $container->getParameter('ffprobe.binaries');
 
-        if (!empty($ffmpeg_lib)) {
-            $ffmpeg_config['ffmpeg.binaries'] = $ffmpeg_lib;
+        if ($container->hasParameter('ffmpeg.binaries')) {
+            $ffmpeg_config['ffmpeg.binaries'] = $container->getParameter('ffmpeg.binaries');
         }
-        if (!empty($ffprobe_lib)) {
-            $ffmpeg_config['ffprobe.binaries'] = $ffprobe_lib;
+
+        if ($container->hasParameter('ffprobe.binaries')) {
+            $ffmpeg_config['ffprobe.binaries'] = $container->getParameter('ffprobe.binaries');
         }
 
         if (empty($ffmpeg_config)) {
