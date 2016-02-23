@@ -63,7 +63,6 @@ class RemoveVideoReferencesCommand extends BaseCommand
         $this->input = $input;
         $this->output = $output;
 
-        include_once 'nzdebug.php';
         $provider = $this->getMediaPool()->getProvider('sonata.media.provider.video');
         $context = $this->getContext();
 
