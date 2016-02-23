@@ -43,6 +43,10 @@ class NzSonataMediaExtension extends Extension
             $ffmpeg_config['ffprobe.binaries'] = $container->getParameter('ffprobe.binaries');
         }
 
+        if ($container->hasParameter('ffmpeg.frame.seconds')) {
+            $ffmpeg_config['ffmpeg.frame.seconds'] = $container->getParameter('ffmpeg.frame.seconds');
+        }
+
         if (empty($ffmpeg_config)) {
             return;
         }

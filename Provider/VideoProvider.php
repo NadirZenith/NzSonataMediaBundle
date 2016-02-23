@@ -107,7 +107,8 @@ class VideoProvider extends FileProvider
             $ffmpeg = $this->getFFMpeg();
 
             $video = $ffmpeg->open($movie_path);
-            $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(1))->save($reference_path);
+            $seconds = (isset($this->ffmpegConfig['ffmpeg.frame.seconds'])) ? $this->ffmpegConfig['ffmpeg.frame.seconds'] : 1;
+            $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds($seconds))->save($reference_path);
 
             $referenceFile = $this->getFilesystem()->get($key);
         }
@@ -247,8 +248,5 @@ class VideoProvider extends FileProvider
     {
         //video provider
         return sprintf('%s/thumb_%s_%s.jpg', $this->generatePath($media), $media->getId(), $format);
-
-        //image provider
-        return $this->thumbnail->generatePrivateUrl($this, $media, $format);
     }
 }
