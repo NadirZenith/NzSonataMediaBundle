@@ -1,0 +1,44 @@
+{
+  "name": "videojs-wavesurfer",
+  "version": "1.1.0",
+  "description": "video.js plugin that adds a navigable waveform for audio and video files.",
+  "main": "videojs.wavesurfer.js",
+  "directories": {
+    "examples": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/collab-project/videojs-wavesurfer.git"
+  },
+  "scripts": {
+    "test": "echo No tests yet!"
+  },
+  "keywords": [
+    "waveform",
+    "audio",
+    "video",
+    "wavesurfer",
+    "videojs",
+    "videojs-plugin",
+    "player"
+  ],
+  "dependencies": {
+    "video.js": ">=5.0.0",
+    "wavesurfer.js": ">=1.0.57"
+  },
+  "devDependencies": {
+    "grunt": ">=0.4.5",
+    "grunt-contrib-concat": ">=0.4.0",
+    "grunt-contrib-jshint": ">=0.10.0",
+    "grunt-contrib-uglify": ">=0.5.0",
+    "grunt-contrib-watch": ">=0.6.1",
+    "grunt-jscs": "^2.7.0"
+  },
+  "author": "Collab",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/collab-project/videojs-wavesurfer/issues"
+  },
+  "homepage": "https://github.com/collab-project/videojs-wavesurfer"
+}

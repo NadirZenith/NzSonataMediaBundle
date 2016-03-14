@@ -1,16 +1,4 @@
-
-<link href="http://vjs.zencdn.net/5.6.0/video-js.css" rel="stylesheet">
-
-{#
-width="{{options.width}}" height="{{options.height}}"
- style="width:100%; height: 320px;"
-<style>
-    .video-js {padding-top: 56.25%}
-    .vjs-fullscreen {padding-top: 0px}
-</style>
-       poster="MY_VIDEO_POSTER.jpg" 
-#}
-<video style="width:100%; height: 320px;" width="auto" height="auto" id="my-video" class="video-js vjs-default-skin" controls preload="auto"
+<video id="nz-video" style="width:100%; height: 320px;" width="auto" height="auto" class="video-js vjs-default-skin" controls preload="auto"
        data-setup="{}">
     <source src="{{options.src}}" type='{{options.type}}'>
     <p class="vjs-no-js">
@@ -18,5 +6,3 @@ width="{{options.width}}" height="{{options.height}}"
         <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
     </p>
 </video>
-
-<script src="http://vjs.zencdn.net/5.6.0/video.js"></script>
