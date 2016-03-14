@@ -10,6 +10,7 @@
         <parameter key="sonata.media.provider.playwire.class">Nz\SonataMediaBundle\Provider\PlayWireProvider</parameter>
         <parameter key="sonata.media.provider.soundcloud.class">Nz\SonataMediaBundle\Provider\SoundcloudProvider</parameter>
         <parameter key="sonata.media.provider.video.class">Nz\SonataMediaBundle\Provider\VideoProvider</parameter>
+        <parameter key="sonata.media.provider.audio.class">Nz\SonataMediaBundle\Provider\AudioProvider</parameter>
 
     </parameters>
 
@@ -112,6 +113,41 @@
             </call>
             <call method="setResizer">
                 <argument type="service" id="nz.sonata.media.resizer.fix_crop" />
+            </call>
+        </service>
+        
+        <service id="sonata.media.provider.audio" class="%sonata.media.provider.audio.class%">
+            <tag name="sonata.media.provider" />
+            <argument>sonata.media.provider.audio</argument>
+            
+            <argument type="service" id="sonata.media.filesystem.local" />
+            <argument type="service" id="sonata.media.cdn.server" />
+            <argument type="service" id="sonata.media.generator.default" />
+            <argument type="service" id="nz.sonata.media.thumbnail.format" />
+            
+            <!-- allowed_extensions -->
+            <argument type="collection">
+                <argument>mp3</argument>
+                <argument>wav</argument>
+            </argument>
+            <!-- allowed_mime_types -->
+            <argument type="collection">
+                <argument>audio/mp3</argument>
+                <argument>audio/mpeg</argument>
+                <argument>audio/wav</argument>
+            </argument>
+            <argument type="service" id="sonata.media.adapter.image.gd" />
+            <argument type="service" id="sonata.media.metadata.proxy" />
+       
+            <call method="setTemplates">
+                <argument type="collection">
+                    <argument key='helper_thumbnail'>SonataMediaBundle:Provider:thumbnail.html.twig</argument>
+                    <argument key='helper_view'>NzSonataMediaBundle:Provider:view_audio.html.twig</argument>
+                </argument>
+            </call>
+            <call method="setResizer">
+                <argument type="service" id="sonata.media.resizer.simple" />
+                <!--<argument type="service" id="nz.sonata.media.resizer.fix_crop" />-->
             </call>
         </service>
 

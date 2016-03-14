@@ -53,5 +53,8 @@ class NzSonataMediaExtension extends Extension
 
         $provider = $container->getDefinition('sonata.media.provider.video');
         $provider->addMethodCall('setFFMpegConfig', array($ffmpeg_config));
+        
+        $provider = $container->getDefinition('sonata.media.provider.audio');
+        $provider->addMethodCall('setFFMpegConfig', array($ffmpeg_config));
     }
 }
