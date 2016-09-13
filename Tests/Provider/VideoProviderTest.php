@@ -62,7 +62,7 @@ class VideoProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group test
+     * @group test2
      */
     public function testProvider()
     {
