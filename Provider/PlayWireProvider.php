@@ -128,8 +128,8 @@ class PlayWireProvider extends BaseVideoProvider
      */
     public function getDownloadResponse(MediaInterface $media, $format, $mode, array $headers = array())
     {
-        dd(func_get_args());
-        return new RedirectResponse(sprintf('http://videos.sapo.pt/%s', $media->getProviderReference()), 302, $headers);
+        //@todo
+        //return new RedirectResponse(sprintf('http://videos.sapo.pt/%s', $media->getProviderReference()), 302, $headers);
     }
 
     /**

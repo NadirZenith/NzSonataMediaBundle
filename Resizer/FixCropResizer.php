@@ -36,7 +36,6 @@ class FixCropResizer implements ResizerInterface
      */
     public function __construct(ImagineInterface $adapter, $mode, MetadataBuilderInterface $metadata)
     {
-        /*dd(func_get_args());*/
         $this->adapter = $adapter;
         $this->mode = $mode;
         $this->metadata = $metadata;
