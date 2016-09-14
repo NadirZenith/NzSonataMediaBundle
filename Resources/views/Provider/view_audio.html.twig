@@ -1,26 +1,25 @@
-<audio id="nz-audio" class="video-js vjs-default-skin" 
-       preload="auto" style="width:100%; height: 100px;" width="auto" height="auto"
-       >
+<audio id="nz-audio" class="video-js vjs-default-skin" preload="auto" style="width:100%; height: 100px;" width="auto" height="auto">
     {#<source src="{{options.src}}" type='{{options.type}}'>#}
 </audio>
 
 <script>
     var player = videojs("nz-audio",
             {
-                controls: true,
-                autoplay: true,
-                loop: false,
-                width: '100%',
-                height: 100,
-                poster: "{{options.poster}}",
+                controls: {{ options.controls }},
+                autoplay: {{ options.autoplay }},
+                loop: {{ options.loop |default(0) }},
+                width: {{ options.width |raw }},
+                height: {{ options.height |raw }},
+                poster: "{{ options.poster }}",
+                {#poster: false,#}
                 plugins: {
                     wavesurfer: {
-                        src: "{{options.src}}",
+                        src: "{{ options.src }}",
                         msDisplayMax: 10,
-                        waveColor: "grey",
-                        progressColor: "black",
-                        cursorColor: "black",
-                        hideScrollbar: true
+                        waveColor: "{{ options.waveColor }}",
+                        progressColor: "{{ options.progressColor }}",
+                        cursorColor: "{{ options.cursorColor }}"
+                        {#hideScrollbar: {{options.hideScrollbar}}#}
                     }
                 }
             });

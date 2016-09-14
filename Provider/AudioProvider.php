@@ -28,14 +28,14 @@ class AudioProvider extends FileProvider
     protected $ffmpegConfig = array();
 
     /**
-     * @param string                   $name
-     * @param Filesystem               $filesystem
-     * @param CDNInterface             $cdn
-     * @param GeneratorInterface       $pathGenerator
-     * @param ThumbnailInterface       $thumbnail
-     * @param array                    $allowedExtensions
-     * @param array                    $allowedMimeTypes
-     * @param ImagineInterface         $adapter
+     * @param string $name
+     * @param Filesystem $filesystem
+     * @param CDNInterface $cdn
+     * @param GeneratorInterface $pathGenerator
+     * @param ThumbnailInterface $thumbnail
+     * @param array $allowedExtensions
+     * @param array $allowedMimeTypes
+     * @param ImagineInterface $adapter
      * @param MetadataBuilderInterface $metadata
      */
     public function __construct($name, Filesystem $filesystem, CDNInterface $cdn, GeneratorInterface $pathGenerator, ThumbnailInterface $thumbnail, array $allowedExtensions = array(), array $allowedMimeTypes = array(), ImagineInterface $adapter, MetadataBuilderInterface $metadata = null)
@@ -69,15 +69,28 @@ class AudioProvider extends FileProvider
 
             $box = $this->resizer->getBox($media, $resizerFormat);
         }
-        return array_merge(array(
-            'poster' => $this->generatePublicUrl($media, $this->getFormatName($media, 'big')),
+
+        $properties = array_merge(array(
+            'poster' => $this->generatePublicUrl($media, $this->getFormatName($media, 'wide_big')),
             'alt' => $media->getName(),
             'title' => $media->getName(),
             'src' => $this->generatePublicUrl($media, $format),
             'width' => $box->getWidth(),
             'height' => $box->getHeight(),
-            'type' => $media->getContentType()
-            ), $options);
+            'type' => $media->getContentType(),
+            'controls' => true,
+            'autoplay' => true,
+            'loop' => false,
+            'width' => '"100%"',
+            'height' => 100,
+            'waveColor' => 'red',
+            'progressColor' => 'blue',
+            'cursorColor' => 'green',
+
+//            'hideScrollbar' => true
+        ), $options);
+
+        return $properties;
     }
 
     /**
@@ -172,7 +185,7 @@ class AudioProvider extends FileProvider
                         imagefill($img, 0, 0, $transparentColor);
                     } else {
                         list($br, $bg, $bb) = $this->html2rgb($background);
-                        imagefilledrectangle($img, 0, 0, (int) ($data_size / $detail), $height * sizeof($wavs_to_process), imagecolorallocate($img, $br, $bg, $bb));
+                        imagefilledrectangle($img, 0, 0, (int)($data_size / $detail), $height * sizeof($wavs_to_process), imagecolorallocate($img, $br, $bg, $bb));
                     }
                 }
 
@@ -209,7 +222,7 @@ class AudioProvider extends FileProvider
                         // draw this data point
                         // relative value based on height of image being generated
                         // data values can range between 0 and 255
-                        $v = (int) ($data / 255 * $height);
+                        $v = (int)($data / 255 * $height);
 
                         // don't print flat values on the canvas if not necessary
                         if (!($v / $height == 0.5 && !$draw_flat)) {
@@ -227,14 +240,14 @@ class AudioProvider extends FileProvider
                             imageline(
                                 $img,
                                 // x1
-                                (int) ($data_point / $detail),
+                                (int)($data_point / $detail),
                                 // y1: height of the image minus $v as a percentage of the height for the wave amplitude
                                 $height * $wav - $v,
                                 // x2
-                                (int) ($data_point / $detail),
+                                (int)($data_point / $detail),
                                 // y2: same as y1, but from the bottom of the image
                                 $height * $wav - ($height - $v), $imgalocate
-                                // imagecolorallocate($img, $r, $g, $b)
+                            // imagecolorallocate($img, $r, $g, $b)
                             );
                         }
                     } else {
@@ -300,8 +313,7 @@ class AudioProvider extends FileProvider
         }
         try {
             $info = $this->getFFProbe()
-                ->format($media->getBinaryContent()->getPathname())
-            ;
+                ->format($media->getBinaryContent()->getPathname());
             // this is the name used to store the file
             if (!$media->getProviderReference() ||
                 $media->getProviderReference() === MediaInterface::MISSING_BINARY_REFERENCE
@@ -340,8 +352,7 @@ class AudioProvider extends FileProvider
             }
 
             $info = $this->getFFProbe()
-                ->format($media->getBinaryContent()->getPathname())
-            ;
+                ->format($media->getBinaryContent()->getPathname());
 
             $media->setLength($info->get('duration'));
             $media->setWidth(1300);
@@ -370,7 +381,8 @@ class AudioProvider extends FileProvider
             $path = $this->thumbnail->generatePublicUrl($this, $media, $format);
         }
 
-        return $this->getCdn()->getPath($path, $media->getCdnIsFlushable());
+        $url = $this->getCdn()->getPath($path, $media->getCdnIsFlushable());
+        return $url;
     }
 
     /**

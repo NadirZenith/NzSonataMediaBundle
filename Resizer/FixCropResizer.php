@@ -30,8 +30,8 @@ class FixCropResizer implements ResizerInterface
     protected $metadata;
 
     /**
-     * @param ImagineInterface         $adapter
-     * @param string                   $mode
+     * @param ImagineInterface $adapter
+     * @param string $mode
      * @param MetadataBuilderInterface $metadata
      */
     public function __construct(ImagineInterface $adapter, $mode, MetadataBuilderInterface $metadata)
@@ -88,28 +88,13 @@ class FixCropResizer implements ResizerInterface
         }
 
         return $this->computeBox($media, $settings);
-        /*
-          if ($settings['width'] == null && $settings['height'] == null) {
-          throw new \RuntimeException(sprintf('Width/Height parameter is missing in context "%s" for provider "%s". Please add at least one parameter.', $media->getContext(), $media->getProviderName()));
-          }
-
-          if ($settings['height'] == null) {
-          $settings['height'] = (int) ($settings['width'] * $size->getHeight() / $size->getWidth());
-          }
-
-          if ($settings['width'] == null) {
-          $settings['width'] = (int) ($settings['height'] * $size->getWidth() / $size->getHeight());
-          }
-
-          return $this->computeBox($media, $settings);
-         *  */
     }
 
     /**
      * @throws InvalidArgumentException
      *
      * @param MediaInterface $media
-     * @param array          $settings
+     * @param array $settings
      *
      * @return Box
      */
