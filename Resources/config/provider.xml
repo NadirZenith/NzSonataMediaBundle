@@ -11,6 +11,7 @@
         <parameter key="sonata.media.provider.soundcloud.class">Nz\SonataMediaBundle\Provider\SoundcloudProvider</parameter>
         <parameter key="sonata.media.provider.video.class">Nz\SonataMediaBundle\Provider\VideoProvider</parameter>
         <parameter key="sonata.media.provider.audio.class">Nz\SonataMediaBundle\Provider\AudioProvider</parameter>
+        <parameter key="sonata.media.provider.qrcode.class">Nz\SonataMediaBundle\Provider\QrCodeProvider</parameter>
 
     </parameters>
 
@@ -151,5 +152,24 @@
             </call>
         </service>
 
+        <service id="sonata.media.provider.qrcode" class="%sonata.media.provider.qrcode.class%">
+            <tag name="sonata.media.provider" />
+
+            <argument>sonata.media.provider.qrcode</argument>
+            <argument type="service" id="sonata.media.filesystem.local" />
+            <argument type="service" id="sonata.media.cdn.server" />
+            <argument type="service" id="sonata.media.generator.default" />
+            <argument type="service" id="sonata.media.thumbnail.format" />
+
+            <!--<call method="setTemplates">-->
+                <!--<argument type="collection">-->
+                    <!--<argument key='helper_thumbnail'>SonataMediaBundle:Provider:thumbnail.html.twig</argument>-->
+                    <!--<argument key='helper_view'>NzSonataMediaBundle:Provider:view_soundcloud.html.twig</argument>-->
+                <!--</argument>-->
+            <!--</call>-->
+            <call method="setResizer">
+                <argument type="service" id="sonata.media.resizer.simple" />
+            </call>
+        </service>
     </services>
 </container>

@@ -11,26 +11,47 @@
 
 namespace Nz\SonataMediaBundle\Provider;
 
-use Buzz\Browser;
-use Gaufrette\Filesystem;
 use Sonata\CoreBundle\Model\Metadata;
-use Sonata\MediaBundle\CDN\CDNInterface;
-use Sonata\MediaBundle\Generator\GeneratorInterface;
-use Sonata\MediaBundle\Metadata\MetadataBuilderInterface;
 use Sonata\MediaBundle\Model\MediaInterface;
-use Sonata\MediaBundle\Thumbnail\ThumbnailInterface;
+use Sonata\MediaBundle\Provider\FileProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Sonata\MediaBundle\Provider\BaseVideoProvider;
 
-class SoundcloudProvider extends BaseVideoProvider
+
+class QrCodeProvider extends FileProvider
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function buildEditForm(FormMapper $formMapper)
+    {
+        $formMapper->add('name');
+        $formMapper->add('enabled', null, array('required' => false));
+        $formMapper->add('authorName');
+        $formMapper->add('cdnIsFlushable');
+        $formMapper->add('description');
+        $formMapper->add('copyright');
+        $formMapper->add('binaryContent', 'text', array('required' => false));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildCreateForm(FormMapper $formMapper)
+    {
+        $formMapper->add('binaryContent', 'text', array(
+            'constraints' => array(
+                new NotBlank(),
+                new NotNull(),
+            ),
+        ));
+    }
 
     /**
      * {@inheritdoc}
      */
     public function getProviderMetadata()
     {
-        return new Metadata($this->getName(), $this->getName() . '.description', false, 'SonataMediaBundle', array('class' => 'fa fa-video-camera'));
+        return new Metadata($this->getName(), $this->getName() . '.description', false, 'SonataMediaBundle', array('class' => 'fa fa-qrcode'));
     }
 
     /**
@@ -39,18 +60,18 @@ class SoundcloudProvider extends BaseVideoProvider
     public function getHelperProperties(MediaInterface $media, $format, $options = array())
     {
 
-        $box = $this->getBoxHelperProperties($media, $format, $options);
-
-        $player_parameters = array_merge([], isset($options['player_parameters']) ? $options['player_parameters'] : array(), array(
-            'width' => $box->getWidth(),
-            'height' => $box->getHeight(),
-        ));
-
-        $params = array(
-            'player_parameters' => $player_parameters,
-        );
-
-        return $params;
+//        $box = $this->getBoxHelperProperties($media, $format, $options);
+//
+//        $player_parameters = array_merge([], isset($options['player_parameters']) ? $options['player_parameters'] : array(), array(
+//            'width' => $box->getWidth(),
+//            'height' => $box->getHeight(),
+//        ));
+//
+//        $params = array(
+//            'player_parameters' => $player_parameters,
+//        );
+//
+//        return $params;
     }
 
     /**
@@ -181,6 +202,6 @@ class SoundcloudProvider extends BaseVideoProvider
      */
     public function getDownloadResponse(MediaInterface $media, $format, $mode, array $headers = array())
     {
-//        return new RedirectResponse(sprintf('http://videos.sapo.pt/%s', $media->getProviderReference()), 302, $headers);
+        return new RedirectResponse(sprintf('http://videos.sapo.pt/%s', $media->getProviderReference()), 302, $headers);
     }
 }
