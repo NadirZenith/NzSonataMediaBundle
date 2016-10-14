@@ -160,13 +160,15 @@
             <argument type="service" id="sonata.media.cdn.server" />
             <argument type="service" id="sonata.media.generator.default" />
             <argument type="service" id="sonata.media.thumbnail.format" />
+            <argument type="service" id="sonata.media.adapter.image.gd" />
 
-            <!--<call method="setTemplates">-->
-                <!--<argument type="collection">-->
-                    <!--<argument key='helper_thumbnail'>SonataMediaBundle:Provider:thumbnail.html.twig</argument>-->
-                    <!--<argument key='helper_view'>NzSonataMediaBundle:Provider:view_soundcloud.html.twig</argument>-->
-                <!--</argument>-->
-            <!--</call>-->
+            <call method="setTemplates">
+                <argument type="collection">
+                    <argument key='helper_thumbnail'>SonataMediaBundle:Provider:thumbnail.html.twig</argument>
+                    <argument key='helper_view'>SonataMediaBundle:Provider:view_image.html.twig</argument>
+                </argument>
+            </call>
+
             <call method="setResizer">
                 <argument type="service" id="sonata.media.resizer.simple" />
             </call>
