@@ -19,7 +19,7 @@
     "require": {
         "symfony/symfony": "~2.3",
         "php-ffmpeg/php-ffmpeg": "0.6.1",
-        "sonata-project/media-bundle": "2.x-dev",
+        "sonata-project/media-bundle": "~2.2",
         "endroid/qrcode": "1.7.4"
     },
     "require-dev" : {
